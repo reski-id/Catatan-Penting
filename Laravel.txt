@@ -150,7 +150,8 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL
 		
 	//sertifikatController {https://github.com/reski-id/laravel8/blob/QueryBuilder%2CMigration/app/Http/Controllers/SertifikatController.php}
 	   use Illuminate\Support\Facades\DB;
-	    - POST
+	   
+	---------------------------------POST-------------------------------------
 			 public function Store(Request $request)
 				{
 					DB::table('sertifikat')->insert([
@@ -163,7 +164,7 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL
 					]);
 					return response()->json("Insert data Success", 200);
 				}
-	    - GET
+	---------------------------------GET--------------------------------------
 			 public function index(Request $request)
 				{
 
@@ -176,14 +177,13 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL
 					$serti = DB::table('sertifikat')->get();
 					return $serti;
 				}
-	    - GET(id)
+	---------------------------------GET BY ID----------------------------------
 			 public function show($id)
 				{
 					$serti = DB::table('sertifikat')->where('id',$id)->first();
 					return $serti;
 				}
-			
-		- PUT
+	---------------------------------PUT----------------------------------------
 			 public function edit(Request $request, $id)
 				{
 					$tasklist = DB::table('sertifikat')->where('id',$id)->update([
@@ -196,7 +196,7 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL
 					]);
 					return response()->json('Update Success', 200);;
 				}
-		- DELETE
+	---------------------------------DELETE---------------------------------------
 			 public function destroy($id)
 				{
 					DB::table('sertifikat')->where('id',$id)->delete();
@@ -219,69 +219,67 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL
         'sampai',
         'link',
     ];
-	-------------------------CRUD Eloquent ORM---------------------
-	get all data 
-		$tasklist = Task::all();
-		$serti = Sertifikat::all();
+	-------------------------GET ALL DATA ORM ---------------------
+	$tasklist = Task::all();
+	$serti = Sertifikat::all();
 	
-	get where 
-		$tasklist = Task::where('task', 'LIKE',"%$request->search%")->get();
-		$serti = Sertifikat::where('name', 'LIKE',"%$request->search%")
+	-------------------------GET WHERE------------------------------
+	$tasklist = Task::where('task', 'LIKE',"%$request->search%")->get();
+	$serti = Sertifikat::where('name', 'LIKE',"%$request->search%")
 	
-	post
-		 Task::create([
-            'task'=>$request->task,
-            'created_at'=> now(),
-        ]);
-		-------------------------------
-		 Sertifikat::create([
-            'name'=>$request->name,
-            'lembaga'=>$request->lembaga,
-            'waktu'=>$request->waktu,
-            'sampai'=>$request->sampai,
-            'link'=>$request->link,
-            'created_at'=> now(),
-        ]);
-        return response()->json("Insert data Success", 200);
+	-------------------------POST----------------------------------
+	Task::create([
+        'task'=>$request->task,
+        'created_at'=> now(),
+    ]); return $task;
+	
+	Sertifikat::create([
+        'name'=>$request->name,
+        'lembaga'=>$request->lembaga,
+        'waktu'=>$request->waktu,
+        'sampai'=>$request->sampai,
+        'link'=>$request->link,
+        'created_at'=> now(),
+    ]); return response()->json("Insert data Success", 200);
 		
-	getbyID
-		$tasklist = Task::find($id);
+	-------------------------GET BY ID----------------------------------
+	$tasklist = Task::find($id);
 		
-		$serti = Sertifikat::find($id);
+	$serti = Sertifikat::find($id);
 		
-        return response()->json([
-            'message'=> "Success get data",
-            'code' => 200,
-            'data' => $serti,
-        ]);;
+    return response()->json([
+        'message'=> "Success get data",
+        'code' => 200,
+        'data' => $serti,
+    ]);;
 		
-	put
-		$tasklist = Task::find($id);
+	-------------------------POST----------------------------------
+	$tasklist = Task::find($id);
 
-        $tasklist->update([
-            'task' => $request->task,
-        ]);
-        return $tasklist;
-		-----------------------------
-		$serti = Sertifikat::find($id);
+    $tasklist->update([
+        'task' => $request->task,
+    ]); return $tasklist;
+	-----------------------------
+	$serti = Sertifikat::find($id);
 
-        $serti ->update([
-            'name'=>$request->name,
-            'lembaga'=>$request->lembaga,
-            'waktu'=>$request->waktu,
-            'sampai'=>$request->sampai,
-            'link'=>$request->link,
-        ]);
-        return response()->json('Update Success', 200);;
+	$serti ->update([
+		'name'=>$request->name,
+		'lembaga'=>$request->lembaga,
+		'waktu'=>$request->waktu,
+		'sampai'=>$request->sampai,
+		'link'=>$request->link,
+	]);
+	return response()->json('Update Success', 200);
 		
-	delete
-		$tasklist = Task::find($id);
-        $tasklist->delete();
-        return response()->json('Delete Success', 200);;
-		-----------------------------------------
-		$serti = Sertifikat::find($id);
-        $serti ->delete();
-        return response()->json('Delete Success', 200);;
+	-------------------------DELETE----------------------------------
+	$tasklist = Task::find($id);
+    $tasklist->delete();
+    return response()->json('Delete Success', 200);
+	-----------------------------------------
+	$serti = Sertifikat::find($id);
+    $serti ->delete();
+    return response()->json('Delete Success', 200);
+	
 	link
 	{sertifikat https://github.com/reski-id/laravel8/blob/ORM/app/Http/Controllers/SertifikatController.php}
 	{task https://github.com/reski-id/laravel8/blob/ORM/app/Http/Controllers/TaskController.php}
