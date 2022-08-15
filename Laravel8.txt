@@ -1,0 +1,372 @@
+CARA PENGGUNAAN FRAMEWORK LARAVEL
+CARA PENGGUNAAN FRAMEWORK LARAVEL
+
+1. Dokumentasi
+	https://laravel.com/docs/8.x/
+==========================================================================================================================
+2. Instalasi {https://laravel.com/docs/8.x/installation}
+	- aktifkan xamppserver apache dan mysql / atau laragon https://laragon.org/download/
+	- download dan install composer di https://getcomposer.org/download/
+	- create project laravel
+		composer create-project laravel/laravel:^8.0 example-app
+	- run project
+		php artisan serve
+==========================================================================================================================
+3. Basic Command PHP Artisan {https://laravel.com/docs/8.x/artisan}
+	- php artisan make:controller NamaController     //untuk membuat controller baru
+	- php artisan make:model NamaModel               //untuk membuat model elequent baru
+	- php artisan make:migration create_users_table  //bikin table baru di database
+	- php artisan migrate 							//menjalankan migration
+	- php artisan migrate:rollback                  //menghapus migration
+	- lanjut update later
+==========================================================================================================================
+4. Route {https://laravel.com/docs/8.x/routing}
+		Route::get('/', function () {
+			return view('welcome');
+		});
+
+		Route::get('/about', function () {
+			return view('about');
+		});
+		-----------------JASON REST API--------------------------
+		Route::get('/hello', function () {
+		$dataarray=[
+			'ID'=>1,
+			'user'=>'batman',
+			'gender'=>'male',
+			'message'=>'hello',
+
+		];
+		return response()->json($dataarray,200);
+		});
+		
+		$tasklist =[
+		1 => 'eat',
+		2 => 'study',
+		3 => 'work'
+		];
+		//get all tasklist
+		Route::get('/task', function () use($tasklist) {
+			return $tasklist;
+		});
+
+		//get tasklist with parameter
+		Route::get('/task/{param}', function ($param) use($tasklist) {
+			return $tasklist[$param];
+		});
+
+		//searching by id
+		Route::get('/task', function () use($tasklist) {
+			if (request()->search) {
+				return $tasklist[request()->search];
+			}
+			return $tasklist;
+		});
+
+		--------------------DEBUGGING-----------------------------
+		Route::get('/debug', function () {
+		$dataarray=[
+			'ID'=>1,
+			'user'=>'batman',
+			'gender'=>'male',
+			'message'=>'hello',
+
+		];
+		dd($dataarray);
+		});
+		----------------------POST JASON REST API-----------------------------
+		$tasklist =[
+			1 => 'eat',
+			2 => 'study',
+			3 => 'work'
+		];
+		Route::post('/task',  function () use($tasklist) {
+			//add csrf token di file Http\Middleware\VerifyCsrfToken
+			/*protected $except = [
+				'/task'
+			];*/
+			$tasklist[request()->label]=request()->task;
+			return $tasklist;
+		});
+		
+		----------------------PUT JASON REST API-----------------------------
+		$tasklist =[
+			1 => 'eat',
+			2 => 'study',
+			3 => 'work'
+		];
+		Route::put('/task/{key}', function ($key) use($tasklist) {
+		$tasklist[$key]=request()->task;
+		return $tasklist;
+		});
+		
+		----------------------DELETE JASON REST API-----------------------------
+		Route::delete('/task/{key}', function ($key) use($tasklist) {
+		unset($tasklist[$key]);
+		return $tasklist;
+		});
+		
+		------------------------JASON API------------------------------------------
+		routing  {https://github.com/reski-id/laravel8/blob/Controller/routes/web.php}
+			Route::post('/task', [TaskController::class, 'store']);
+			Route::get('/task', [TaskController::class, 'index']);
+			Route::get('/task/{param}', [TaskController::class, 'show']);
+			Route::put('/task/{param}', [TaskController::class, 'edit']);//
+			Route::delete('/task/{param}', [TaskController::class, 'delete']);
+		TaskController {https://github.com/reski-id/laravel8/blob/Controller/app/Http/Controllers/TaskController.php}
+		
+==========================================================================================================================
+5. Controller {https://laravel.com/docs/8.x/controllers}	
+	php artisan make:controller HomeController
+	
+	Route::get('/', [HomeController::class, 'index']);
+	Route::get('/', [HomeController::class, 'about']);
+	Route::get('/', [HomeController::class, 'karya']);
+	
+	public function index()
+    {
+        return view('welcome');
+    }
+	public function about()
+    {
+        return view('aboutpage');
+    }
+	public function karya()
+    {
+        return view('portofoliopage');
+    }
+================================================================================================================================
+6. Migration {https://laravel.com/docs/8.x/migrations}
+	- php artisan make:migration create_task_table  //membuat table task di db
+	- php artisan migrate           //membuat migration 
+	- php artisan migrate:rollback //menghapus migration
+================================================================================================================================
+7. Query Builder {https://laravel.com/docs/8.x/queries}
+	//route {https://github.com/reski-id/laravel8/blob/QueryBuilder%2CMigration/routes/web.php}
+		Route::post('/sertifikat', [SertifikatController::class, 'store']);
+		Route::get('/sertifikat', [SertifikatController::class, 'index']);
+		Route::get('/sertifikat/{id}', [SertifikatController::class, 'show']);
+		Route::put('/sertifikat/{id}', [SertifikatController::class, 'edit']);
+		Route::delete('/sertifikat/{id}', [SertifikatController::class, 'destroy']);
+		
+	//sertifikatController {https://github.com/reski-id/laravel8/blob/QueryBuilder%2CMigration/app/Http/Controllers/SertifikatController.php}
+	   use Illuminate\Support\Facades\DB;
+	   
+	---------------------------------POST-------------------------------------
+			 public function Store(Request $request)
+				{
+					DB::table('sertifikat')->insert([
+						'name'=>$request->name,
+						'lembaga'=>$request->lembaga,
+						'waktu'=>$request->waktu,
+						'sampai'=>$request->sampai,
+						'link'=>$request->link,
+						'created_at'=> now(),
+					]);
+					return response()->json("Insert data Success", 200);
+				}
+	---------------------------------GET--------------------------------------
+			 public function index(Request $request)
+				{
+
+					if (request()->search) {
+						$serti = DB::table('sertifikat')
+						->where('name', 'LIKE',"%$request->search%")
+						->get();
+						return $serti;
+					}
+					$serti = DB::table('sertifikat')->get();
+					return $serti;
+				}
+	---------------------------------GET BY ID----------------------------------
+			 public function show($id)
+				{
+					$serti = DB::table('sertifikat')->where('id',$id)->first();
+					return $serti;
+				}
+	---------------------------------PUT----------------------------------------
+			 public function edit(Request $request, $id)
+				{
+					$tasklist = DB::table('sertifikat')->where('id',$id)->update([
+						'name'=>$request->name,
+						'lembaga'=>$request->lembaga,
+						'waktu'=>$request->waktu,
+						'sampai'=>$request->sampai,
+						'link'=>$request->link,
+						'updated_at' => now(),
+					]);
+					return response()->json('Update Success', 200);;
+				}
+	---------------------------------DELETE---------------------------------------
+			 public function destroy($id)
+				{
+					DB::table('sertifikat')->where('id',$id)->delete();
+					return response()->json('Delete Success', 200);;
+				}
+
+================================================================================================================================
+8. Model/Elequent {https://laravel.com/docs/8.x/eloquent-serialization#serializing-models-and-collections} 
+		          {https://laravel.com/docs/8.x/eloquent-collections#available-methods}
+				  
+	php artisan make:model Task
+	
+	use App\Models\Task; //file TaskController.php
+	
+	//model sertifikat
+	protected $fillable = [
+        'name',
+        'lembaga',
+        'waktu',
+        'sampai',
+        'link',
+    ];
+	-------------------------GET ALL DATA ORM ---------------------
+	$tasklist = Task::all();
+	$serti = Sertifikat::all();
+	
+	-------------------------GET WHERE------------------------------
+	$tasklist = Task::where('task', 'LIKE',"%$request->search%")->get();
+	$serti = Sertifikat::where('name', 'LIKE',"%$request->search%")
+	
+	-------------------------POST----------------------------------
+	Task::create([
+        'task'=>$request->task,
+        'created_at'=> now(),
+    ]); return $task;
+	
+	Sertifikat::create([
+        'name'=>$request->name,
+        'lembaga'=>$request->lembaga,
+        'waktu'=>$request->waktu,
+        'sampai'=>$request->sampai,
+        'link'=>$request->link,
+        'created_at'=> now(),
+    ]); return response()->json("Insert data Success", 200);
+		
+	-------------------------GET BY ID----------------------------------
+	$tasklist = Task::find($id);
+		
+	$serti = Sertifikat::find($id);
+		
+    return response()->json([
+        'message'=> "Success get data",
+        'code' => 200,
+        'data' => $serti,
+    ]);;
+		
+	-------------------------POST----------------------------------
+	$tasklist = Task::find($id);
+
+    $tasklist->update([
+        'task' => $request->task,
+    ]); return $tasklist;
+	-----------------------------
+	$serti = Sertifikat::find($id);
+
+	$serti ->update([
+		'name'=>$request->name,
+		'lembaga'=>$request->lembaga,
+		'waktu'=>$request->waktu,
+		'sampai'=>$request->sampai,
+		'link'=>$request->link,
+	]);
+	return response()->json('Update Success', 200);
+		
+	-------------------------DELETE----------------------------------
+	$tasklist = Task::find($id);
+    $tasklist->delete();
+    return response()->json('Delete Success', 200);
+	-----------------------------------------
+	$serti = Sertifikat::find($id);
+    $serti ->delete();
+    return response()->json('Delete Success', 200);
+	
+	link
+	{sertifikat https://github.com/reski-id/laravel8/blob/ORM/app/Http/Controllers/SertifikatController.php}
+	{task https://github.com/reski-id/laravel8/blob/ORM/app/Http/Controllers/TaskController.php}
+	{Route https://github.com/reski-id/laravel8/blob/ORM/routes/web.php}
+	
+================================================================================================================================	
+9. Faker generate dummy data {https://laravel.com/docs/8.x/database-testing#concept-overview}
+	php artisan make:factory TaskFactory --model=Task    //create factory
+	
+	public function definition() //TaskFactory.php
+		{
+			return [
+				'task' => $this->faker->word()
+			];
+		}
+	
+	public function run() //DatabaseSeeder.php
+    {
+        \App\Models\Task::factory(20)->create();
+    }
+	
+	php artisan migrate:fresh --seed   //run seeeder
+================================================================================================================================	
+10. View / Blade Templating
+	contoh struktur {https://github.com/reski-id/Catatan-Penting/blob/main/blade/sruktur.png}
+	
+	//file welcome.blade.php {https://github.com/reski-id/Catatan-Penting/blob/main/blade/welcome.png}
+		@extends('layouts.app')   //memanggil main konten
+		@section('main')
+		  html biasa dinamis yang akan dikirim ke app.blade.php
+		@endsection
+	
+	//navbar {https://github.com/reski-id/Catatan-Penting/blob/main/blade/nav.png}
+		html biasa navbar
+	
+	//file app.blade.php {https://github.com/reski-id/Catatan-Penting/blob/main/blade/appblade.png}
+		@include('layouts.components.navbar')
+		@yield('main')
+
+	//returning data
+		--------controller------------------
+		$tasklist = Task::paginate(3);
+        return view('task.index', [
+            'data' => $tasklist
+        ]);
+		-----------view---------------
+		@foreach ($data as $item)
+			html {{$item->task}} html
+		@endforeach
+		-----------pagination---------------
+		<br/>
+		{{$data->links('pagination::bootstrap-4')}}
+
+11. validasi
+	php artisan make:request TaskRequest
+	
+	-------------TaskRequest-----------------
+	public function rules()
+		{
+			return [
+					'task' => ['required'],
+			];
+		}
+	------------------controller------------------------
+	//save to db
+    public function store(TaskRequest $request)
+    {}
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================================================================
