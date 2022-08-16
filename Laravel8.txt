@@ -1,5 +1,4 @@
-CARA PENGGUNAAN FRAMEWORK LARAVEL
-CARA PENGGUNAAN FRAMEWORK LARAVEL
+CARA PENGGUNAAN FRAMEWORK LARAVEL https://github.com/reski-id/laravel8
 
 1. Dokumentasi
 	https://laravel.com/docs/8.x/
@@ -333,27 +332,63 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL
 		-----------pagination---------------
 		<br/>
 		{{$data->links('pagination::bootstrap-4')}}
+================================================================================================================================
+11. Validasi Error Input {https://laravel.com/docs/8.x/validation}
 
-11. validasi
 	php artisan make:request TaskRequest
-	
 	-------------TaskRequest-----------------
 	public function rules()
-		{
-			return [
-					'task' => ['required'],
-			];
-		}
+    {
+        $rule_task_unique = Rule::unique('task','task');
+
+        if ($this-> method() !== 'POST'){
+            $rule_task_unique->ignore($this->route()->parameter('id')); //ignore rule jika update
+        }
+        return [
+                'task' => ['required', $rule_task_unique],
+        ];
+    }
+
+    public function messages()
+    {
+		return[
+			'required' => 'isian :attribute harus diisi',
+			// 'user.required' => 'nama pengguna harus diisi',
+		];
+    }
 	------------------controller------------------------
 	//save to db
     public function store(TaskRequest $request)
     {}
 	
 
+================================================================================================================================
+12. Auth https://laravel.com/docs/8.x/starter-kits#laravel-breeze
+	     https://laravel.com/docs/8.x/fortify#main-content
+		
+	-install 
+		composer require laravel/fortify
+	-config
+		php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"
+	-add service to config/app.php
+		App\Providers\FortifyServiceProvider::class,
+	-run migrate
+		php artisan migrate:fresh --seed
+	-FortifyServiceProvider.php
+		Fortify::registerView(function()
+        {
+            return view('auth.register');
+        });
 
+        Fortify::loginView(function()
+        {
+            return view('auth.login');
+        });
 
-
-
+        Fortify::requestPasswordResetLinkView(function()
+        {
+            return view('auth.forgot-password');
+        });
 
 
 
@@ -370,3 +405,5 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL
 
 
 ================================================================================================================================
+12. Export data Excel PDF
+13. using populer API
