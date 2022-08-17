@@ -1,0 +1,6 @@
+- run all test
+  go test ./... -v
+  
+- test persentase test
+  go test -coverprofile result.out ./...
+  go tool cover -html result.out
