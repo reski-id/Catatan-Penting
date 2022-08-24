@@ -15,6 +15,7 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL https://github.com/reski-id/laravel8
 	- php artisan make:controller NamaController     //untuk membuat controller baru
 	- php artisan make:model NamaModel               //untuk membuat model elequent baru
 	- php artisan make:migration create_users_table  //bikin table baru di database
+	- php artisan make:migration add_api_token_column_to_users_table --table=users  //modifikasi
 	- php artisan migrate 							//menjalankan migration
 	- php artisan migrate:rollback                  //menghapus migration
 	- lanjut update later
