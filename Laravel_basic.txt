@@ -305,18 +305,18 @@ CARA PENGGUNAAN FRAMEWORK LARAVEL https://github.com/reski-id/laravel8
 	php artisan migrate:fresh --seed   //run seeeder
 ================================================================================================================================	
 10. View / Blade Templating
-	contoh struktur {https://github.com/reski-id/Catatan-Penting/blob/main/blade/sruktur.png}
+	contoh struktur {https://github.com/reski-id/Catatan-Penting/blob/main/assets/blade/sruktur.png}
 	
-	//file welcome.blade.php {https://github.com/reski-id/Catatan-Penting/blob/main/blade/welcome.png}
+	//file welcome.blade.php {https://github.com/reski-id/Catatan-Penting/blob/main/assets/blade/welcome.png}
 		@extends('layouts.app')   //memanggil main konten
 		@section('main')
 		  html biasa dinamis yang akan dikirim ke app.blade.php
 		@endsection
 	
-	//navbar {https://github.com/reski-id/Catatan-Penting/blob/main/blade/nav.png}
+	//navbar {https://github.com/reski-id/Catatan-Penting/blob/main/assets/blade/nav.png}
 		html biasa navbar
 	
-	//file app.blade.php {https://github.com/reski-id/Catatan-Penting/blob/main/blade/appblade.png}
+	//file app.blade.php {https://github.com/reski-id/Catatan-Penting/blob/main/assets/blade/appblade.png}
 		@include('layouts.components.navbar')
 		@yield('main')
 
