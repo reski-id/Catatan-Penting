@@ -1,5 +1,18 @@
 
+docker run --name ign2 -p 80:8000 -d --link mysqlku -e SECRET="secr3t" -e SERVERPORT=8000 -e Name="sosmed" -e Address=mysqlku -e Port=3306 -e Username="root" -e Password="reski123" rizunadiva/appklp5
 
+
+
+docker run -p --name mysqlku -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD="reski123" mysql 
+
+
+
+docker pull rizunadiva/appklp5:latest
+
+docker run --name ign --link database -p 8001:8000 -d  -e SECRET="secr3t" -e SERVERPORT=8000 -e Name="sosmed" -e Port="3306"  -e Address=database rizunadiva/appklp5
+
+docker run --name ign2 -p 8001:8000 -d -e SECRET="secr3t" -e SERVERPORT=8000 -e Name="sosmed" -e Address=mysqlku -e Port=3306 -e Username="root" -e Password="" rizunadiva/appklp5
+------------------------------------------------------------------
 
 docker run --name <nama_container> -p <port_server>:<port_container> -e <environtment_key=environtment_value> (seperlunya) [docker images]
 docker pull project dockerhub
