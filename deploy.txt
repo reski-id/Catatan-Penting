@@ -22,7 +22,23 @@ docker run --name ign2 -p 80:8000 -d --link mysqlku -e SECRET="secr3t" -e SERVER
 
 docker run -p --name mysqlku -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD="reski123" mysql
 
+--------------------------------------------------------------------------------------------------
+sudo chmod 777 /var/run/docker.sock
 
+docker run --name mysqlku -p 3306:3306 -d -e MYSQL_ROOT_PASSWORD="reski123" mysql 
+
+docker run --name ign2 -p 80:8000 -d --link mysqlku -e SECRET="secr3t" -e SERVERPORT=8000 -e Name="sosmed" -e Address=mysqlku -e Port=3306 -e Username="root" -e Password="reski123" rizunadiva/appklp5
+
+
+docker exec -it mysqlku bash
+mysql -u root -p
+create database sosmed
+docker logs ign2
+
+setelah restart server
+run container mysql, app
+	docker start containerID	
+docker logs ign2
 
 
 
